@@ -7,6 +7,7 @@ contract Crowdfunding {
     uint public totalContributions;
     uint public goal;
     uint public deadline;
+    uint public refundAmount;
 
     // Events
     event ContributionReceived(address contributor, uint amount);
@@ -19,40 +20,34 @@ contract Crowdfunding {
         deadline = block.timestamp + _duration;
     }
 
-    function contribute() public payable {
+    function contribute(uint _amount) public payable {
         require(block.timestamp < deadline, "Funding period has ended.");
-        require(msg.value > 0, "Contribution must be greater than 0.");
-        
-        contributions[msg.sender] += msg.value;
-        totalContributions += msg.value;
-        assert(totalContributions <= goal);
-        
-        emit ContributionReceived(msg.sender, msg.value);
+        require(_amount > 0, "Contribution must be greater than 0.");
+        require(msg.value == _amount, "Invalid contribution amount.");
+        contributions[msg.sender] += _amount;
+        totalContributions += _amount;
+        emit ContributionReceived(msg.sender, _amount);
     }
 
     function withdrawFunds() public {
         require(msg.sender == owner, "Only owner can withdraw funds.");
         require(block.timestamp >= deadline, "Funding period has not ended.");
         require(totalContributions >= goal, "Funding goal not reached.");
-
         uint amount = totalContributions;
         totalContributions = 0;
         payable(owner).transfer(amount);
-
         emit FundsWithdrawn(amount);
     }
 
-    function issueRefunds() public {
+    function issueRefund() public {
         require(block.timestamp >= deadline, "Funding period has not ended.");
         require(totalContributions < goal, "Funding goal reached, no refunds.");
-
         uint contributedAmount = contributions[msg.sender];
         require(contributedAmount > 0, "No contributions to refund.");
-        
+        refundAmount = contributedAmount;
         contributions[msg.sender] = 0;
-        payable(msg.sender).transfer(contributedAmount);
-
-        emit RefundIssued(msg.sender, contributedAmount);
+        payable(msg.sender).transfer(refundAmount);
+        emit RefundIssued(msg.sender, refundAmount);
     }
 
     function checkGoalReached() public view returns (bool) {
@@ -65,6 +60,6 @@ contract Crowdfunding {
 
     // Fallback function to accept contributions
     receive() external payable {
-        contribute();
+        contribute(msg.value);
     }
 }
