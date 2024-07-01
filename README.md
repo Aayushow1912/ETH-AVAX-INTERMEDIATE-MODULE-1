@@ -107,7 +107,7 @@ contractInstance.Recieve();
 ### State Variables
 
 - **`owner`**: The address of the contract owner with special privileges. It is of type `address`.
-- **`contributions`**:  A mapping that tracks the amount of Ether contributed by each address. It is of type `mapping(address => bool)`.
+- **`contributions`**:  A mapping that tracks the amount of Ether contributed by each address. It is of type `mapping(address => uint)`.
 - **`totalContributions`**:  The total amount of contributions received in Ether. It is a type of `uint`.
 - **`goal`**:The funding goal of the crowdfunding campaign in Ether. It is a type of `uint`.
 - **`deadline`**:  The timestamp marking the end of the crowdfunding campaign. It is a type of `uint`.
