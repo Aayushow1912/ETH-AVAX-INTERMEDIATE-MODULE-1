@@ -94,15 +94,6 @@ Example usage:
 contractInstance.checkGoalReached();
 ```
 
-### `removeProposal(uint256 proposalIndex)`
-
-The `removeProposal` function allows the chairperson to remove a proposal at a specific index. It ensures the proposal index is valid and shifts remaining proposals.
-
-Example usage:
-```solidity
-contractInstance.removeProposal(0);
-```
-
 ### `Fallback Function`
 ##  `Recieve()`
 
