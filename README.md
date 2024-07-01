@@ -49,13 +49,12 @@ revert("This function always reverts");
 To use this contract in the Remix IDE, follow these steps:
 
 1. Open the Remix IDE (https://remix.ethereum.org/).
-2. Create a new Solidity file and name it "Voting.sol".
-3. Copy and paste the contract code into the "Voting.sol" file.
+2. Create a new Solidity file and name it "CrowdFunding.sol".
+3. Copy and paste the contract code into the "CrowdFunding.sol" file.
 4. Select the appropriate Solidity compiler version (0.8.0 or higher) in the Remix IDE.
 5. Compile the contract by clicking the "Compile" button.
 6. Once compiled successfully, you can interact with the contract using the Remix IDE's built-in console or by deploying it to a test network.
 
-**Note:** Before interacting with the contract, make sure you have a compatible Ethereum wallet connected to the Remix IDE (e.g., MetaMask).
 
 ## Contract Functionality
 
