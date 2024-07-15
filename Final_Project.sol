@@ -5,61 +5,48 @@ contract Crowdfunding {
     address public owner;
     mapping(address => uint) public contributions;
     uint public totalContributions;
+    uint MinimumContributions;
+    uint raisedAmount;
     uint public goal;
     uint public deadline;
-    uint public refundAmount;
 
     // Events
     event ContributionReceived(address contributor, uint amount);
-    event FundsWithdrawn(uint amount);
-    event RefundIssued(address contributor, uint amount);
 
     constructor(uint _goal, uint _duration) {
         owner = msg.sender;
         goal = _goal;
         deadline = block.timestamp + _duration;
+        MinimumContributions = 100 wei;
     }
 
-    function contribute(uint _amount) public payable {
+    function contribute() public payable {
         require(block.timestamp < deadline, "Funding period has ended.");
-        require(_amount > 0, "Contribution must be greater than 0.");
-        require(msg.value == _amount, "Invalid contribution amount.");
-        contributions[msg.sender] += _amount;
-        totalContributions += _amount;
-        emit ContributionReceived(msg.sender, _amount);
-    }
+        require(msg.value >= MinimumContributions, "The Minimum contributions not met!");
 
-    function withdrawFunds() public {
-        require(msg.sender == owner, "Only owner can withdraw funds.");
-        require(block.timestamp >= deadline, "Funding period has not ended.");
-        require(totalContributions >= goal, "Funding goal not reached.");
-        uint amount = totalContributions;
-        totalContributions = 0;
-        payable(owner).transfer(amount);
-        emit FundsWithdrawn(amount);
-    }
+        if(contributions[msg.sender] == 0){
+            totalContributions++;
+        }
+        contributions[msg.sender] += msg.value;
+        raisedAmount += msg.value;
 
-    function issueRefund() public {
-        require(block.timestamp >= deadline, "Funding period has not ended.");
-        require(totalContributions < goal, "Funding goal reached, no refunds.");
-        uint contributedAmount = contributions[msg.sender];
-        require(contributedAmount > 0, "No contributions to refund.");
-        refundAmount = contributedAmount;
-        contributions[msg.sender] = 0;
-        payable(msg.sender).transfer(refundAmount);
-        emit RefundIssued(msg.sender, refundAmount);
+        emit ContributionReceived(msg.sender, msg.value);
     }
-
-    function checkGoalReached() public view returns (bool) {
-        if (block.timestamp >= deadline) {
-            return totalContributions >= goal;
+    
+     function checkGoalReached() public view returns (bool) {
+        if (raisedAmount >= goal) {
+            return true;
         } else {
             return false;
         }
+     }
+
+    function getBalance() public view returns(uint) {
+        return address(this).balance;
     }
 
     // Fallback function to accept contributions
     receive() external payable {
-        contribute(msg.value);
+        contribute();
     }
 }
