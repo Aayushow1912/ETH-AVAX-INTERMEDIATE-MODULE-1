@@ -1,124 +1,44 @@
-# Solidity Contract Readme
+# ETH + AVAX  Intermediate Module 1 Project
 
-📄 **Crowdfunding** - A Simple Solidity Contract for Crowdfunding with error handling
+Metacrafters ETH + AVAX Module 1 Project
 
-# CrowdFunding
+## Description
 
-This is a simple Solidity contract that demonstrates error handling in Solidity using the `assert`, `revert`, and `require` statements. The contract implements a Crowdfunding system where the contributor can contribute the amount,also they can refund their amount whatever they wants, alongwith the owner can withdraw the funds whenever needed.
+This project serves the purpose of fulfilling a requirement for ETH + AVAX PROOF: Intermediate EVM Course of Metacrafters
 
-## Contract Overview
+This project demonstrates the use of `require()`, `assert()`, and `revert()` functions in a smart contract
 
-The `CrowdFunding` contract includes the following functionality:
+## Getting Started
 
-- A `owner` variable that stores the address of the contract deployer.
-- A `totalcontributions` mapping to track which addresses have done with contributions.
-- A `refundAmount` for the contributors, if they want a refund.
-- Functions to contribute, for withdrawal of funds, for refund and for checking the goal reached or not.
+### Executing the program
 
-## Error Handling
+1. Open [(https://jeffryanpol-soliditysta-bmmtpapmg0g.ws-us114.gitpod.io/)] and create a Gitpod workspace
+2. Wait for npm to install Truffle (if the installation did not start automatically, enter `npm install -g truffle` on the terminal)
+3. Start the Truffle console by entering `truffle develop` on the terminal
+4. Enter `compile` and then `migrate` on the terminal
+5. Enter `let instance = await FunctionsAndErrors.deployed()` so that you may interact with the smart contract using the object `instance`
+6. Play around with the contract using `instance.<functionName>(<argument>)` (For example: `instance.requireEvenNumber(2)`)
 
-### `require()`
+Note: 
 
-The `require()` statement is used to validate certain conditions before further execution of a function.
+To check the value of `evenCount`, enter `(await instance.evenCount()).toString()`
 
-Example:
-```solidity
-require(<condition to be validated>, <message to be displayed if the condition fails>);
-```
+You may also make a simple async function (`let getEvenCount = async() => (await instance.evenCount()).toString()`) so that you just need to call that function (`getEvenCount()`) to get the value of `evenCount`
 
-### `assert()`
+### Callable Variables and Functions
 
-The `assert()` statement is similar to `require()` and checks for conditions. If a condition fails, the function execution is terminated with an error message.
+`uint public evenCount`
 
-Example:
-```solidity
-assert(<condition to be checked/validated>);
-```
+`function requireEvenNumber(uint number) external`
 
-### `revert()`
+`function assertEvenNumber(uint number) external`
 
-The `revert()` statement can be used to flag an error and revert the current call. It can also include a message providing details about the error, which will be passed back to the caller.
+`function revertEvenNumber(uint number) external`
 
-Example:
-```solidity
-revert("This function always reverts");
-```
+### Author
 
-## Using the Contract in Remix IDE
-
-To use this contract in the Remix IDE, follow these steps:
-
-1. Open the Remix IDE (https://remix.ethereum.org/).
-2. Create a new Solidity file and name it "CrowdFunding.sol".
-3. Copy and paste the contract code into the "CrowdFunding.sol" file.
-4. Select the appropriate Solidity compiler version (0.8.0 or higher) in the Remix IDE.
-5. Compile the contract by clicking the "Compile" button.
-6. Once compiled successfully, you can interact with the contract using the Remix IDE's built-in console or by deploying it to a test network.
-
-
-## Contract Functionality
-
-### `contribute(uint256 _amount)`
-
-The `contribute` function allows the contributor to contribute the amount for fundings.
-
-Example usage:
-```solidity
-contractInstance.contribute("Contributions");
-```
-
-### `withdrawFunds()`
-
-The `withdrawFunds` function is for the owner, only owner can withdraw the funds if the funds reached the goal amount.
-
-Example usage:
-```solidity
-contractInstance.withdrawFunds();
-```
-
-### `issueRefund()`
-
-The `issueRefund` function is for the contributors, if they wants to refund the amount, then they can call this function.
-
-Example usage:
-```solidity
-contractInstance.issueRefund();
-```
-
-### `checkGoalReached()`
-
-The `checkGoalReached` function checks if the fund goal has been reached or not.
-
-Example usage:
-```solidity
-contractInstance.checkGoalReached();
-```
-
-### `Fallback Function`
-##  `Recieve()`
-
-The `Recieve` function is a payable function which is used to accept the contributions.
-
-Example usage:
-```solidity
-contractInstance.Recieve();
-```
-
-### State Variables
-
-- **`owner`**: The address of the contract owner with special privileges. It is of type `address`.
-- **`contributions`**:  A mapping that tracks the amount of Ether contributed by each address. It is of type `mapping(address => uint)`.
-- **`totalContributions`**:  The total amount of contributions received in Ether. It is a type of `uint`.
-- **`goal`**:The funding goal of the crowdfunding campaign in Ether. It is a type of `uint`.
-- **`deadline`**:  The timestamp marking the end of the crowdfunding campaign. It is a type of `uint`.
-- **`refundAmount`**: The amount of Ether to be refunded to a contributor. It is a type of `uint`.
-
-This detailed breakdown of the contxract functions and state variables should help you understand and present the functionality of the CrowdFunding contract effectively.
-
-
-## 🌟 **Acknowledgement** 🌟
-
-This project was built under the guidance of the [Metacrafters](https://www.metacrafters.io) team as part of their comprehensive [Eth-Avax Proof-intermediate](https://academy.metacrafters.io/content/solidity-avax-intermediate). I express my gratitude to the MetaCrafters team for their support and guidance throughout this learning journey.
-
-## Authors
 Aayush Tewari
+
+
+
+
