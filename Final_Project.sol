@@ -1,52 +1,52 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
 
-contract Crowdfunding {
-    address public owner;
-    mapping(address => uint) public contributions;
-    uint public totalContributions;
-    uint MinimumContributions;
-    uint raisedAmount;
-    uint public goal;
-    uint public deadline;
+pragma solidity 0.8.13;
 
-    // Events
-    event ContributionReceived(address contributor, uint amount);
+contract CustomToken {
+    string public name;
+    string public sym;
+    uint256 public supply;
+    address public creator;
 
-    constructor(uint _goal, uint _duration) {
-        owner = msg.sender;
-        goal = _goal;
-        deadline = block.timestamp + _duration;
-        MinimumContributions = 100 wei;
+    event TokensMinted(address indexed recipient, uint256 amount);
+    event TokensBurned(address indexed account, uint256 amount);
+    event TokensTransferred(address indexed sender, address indexed recipient, uint256 amount);
+
+    error BalanceTooLow(uint256 available, uint256 requested);
+
+    mapping(address => uint256) public balances;
+
+    modifier onlyCreator() {
+        assert(msg.sender == creator);
+        _;
     }
 
-    function contribute() public payable {
-        require(block.timestamp < deadline, "Funding period has ended.");
-        require(msg.value >= MinimumContributions, "The Minimum contributions not met!");
+    constructor() {
+        name = "Ubuntu";
+        sym = "UB";
+        supply = 0;
+        creator = msg.sender;
+    }
 
-        if(contributions[msg.sender] == 0){
-            totalContributions++;
+    function mintTokens(address recipient, uint256 amount) public onlyCreator {
+        supply += amount;
+        balances[recipient] += amount;
+        emit TokensMinted(recipient, amount);
+    }
+
+    function burnTokens(address account, uint256 amount) public onlyCreator {
+        if (balances[account] < amount) {
+            revert BalanceTooLow({available: balances[account], requested: amount});
         }
-        contributions[msg.sender] += msg.value;
-        raisedAmount += msg.value;
-
-        emit ContributionReceived(msg.sender, msg.value);
-    }
-    
-     function checkGoalReached() public view returns (bool) {
-        if (raisedAmount >= goal) {
-            return true;
-        } else {
-            return false;
-        }
-     }
-
-    function getBalance() public view returns(uint) {
-        return address(this).balance;
+        balances[account] -= amount;
+        supply -= amount;
+        emit TokensBurned(account, amount);
     }
 
-    // Fallback function to accept contributions
-    receive() external payable {
-        contribute();
+    function transferTokens(address recipient, uint256 amount) public {
+        require(balances[msg.sender] >= amount, "Insufficient balance for transfer");
+        balances[msg.sender] -= amount;
+        balances[recipient] += amount;
+        emit TokensTransferred(msg.sender, recipient, amount);
     }
 }
